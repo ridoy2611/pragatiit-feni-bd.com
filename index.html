@@ -182,7 +182,16 @@
         
         @media (max-width: 1050px) { .nav-links { gap: 10px; } .nav-links a { font-size: 13px; } }
         @media (max-width: 992px) { .hero h1 { font-size: 3.5rem; } nav { padding: 15px 20px; } .contact-box { flex-direction: column; text-align: center; gap: 30px; margin: 30px 20px; padding: 40px 20px; } .menu-toggle { display: block; } .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--nav-bg); padding: 20px 0; border-bottom: 3px solid var(--accent-primary); } .nav-links.active { display: flex; gap: 20px; } }
-        @media (max-width: 768px) { .section-pad { padding: 50px 15px; } .hero h1 { font-size: 2.2rem; } .hero .subtitle { font-size: 1rem; } .services-grid { grid-template-columns: 100%; gap: 20px; } .stat-number { font-size: 2.5rem; } .float-wa { bottom: 20px; right: 20px; width: 50px; height: 50px; } .float-wa svg { width: 28px; height: 28px; } .prev-btn, .next-btn { display: none; } }
+        @media (max-width: 768px) { .section-pad { padding: 50px 15px; } .hero h1 { font-size: 2.2rem; } .hero .subtitle { font-size: 1rem; } .services-grid { grid-template-columns: 100%; gap: 20px; } .stat-number { font-size: 2.5rem; } .float-wa { bottom: 20px; right: 20px; width: 50px; height: 50px; } .float-wa svg { width: 28px; height: 28px; } @media (max-width: 768px) {
+    /* আগের অন্যান্য কোড যেমন আছে তেমনই থাকবে */
+    .prev-btn, .next-btn { 
+        display: block; 
+        font-size: 35px; /* মোবাইলের জন্য সাইজ ছোট করা হয়েছে */
+        padding: 10px; 
+    }
+    .prev-btn { left: 0px; } 
+    .next-btn { right: 0px; }
+} }
     </style>
 </head>
 <body id="home">
@@ -520,6 +529,29 @@
     }
     function closeLightbox(e) { if(e) e.stopPropagation(); document.getElementById('lightbox').style.display = 'none'; }
     function changeImage(dir, e) { if(e) e.stopPropagation(); currentIndex = (currentIndex + dir + currentGallery.length) % currentGallery.length; document.getElementById('lightbox-img').src = currentGallery[currentIndex]; }
+    // মোবাইলে সোয়াইপ করে ছবি পরিবর্তন করার জন্য কোড
+    let touchstartX = 0;
+    let touchendX = 0;
+    
+    const lightboxElement = document.getElementById('lightbox');
+    
+    lightboxElement.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+    
+    lightboxElement.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        if (touchendX < touchstartX - 40) {
+            changeImage(1); // বামে সোয়াইপ করলে পরের ছবি
+        }
+        if (touchendX > touchstartX + 40) {
+            changeImage(-1); // ডানে সোয়াইপ করলে আগের ছবি
+        }
+    }
     document.addEventListener('keydown', e => { if(document.getElementById('lightbox').style.display === 'flex') { if(e.key === 'ArrowLeft') changeImage(-1); if(e.key === 'ArrowRight') changeImage(1); if(e.key === 'Escape') closeLightbox(); } });
 </script>
 </body>
